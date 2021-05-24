@@ -19,7 +19,9 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "craco start",
+    "start": "concurrently -k yarn:start:*",
+    "start:client": "craco start",
+    "start:server": "json-graphql-server db/db.js --p 4000",
     "build": "craco build",
     "build:check": "tsc --noEmit",
     "test": "craco test",
@@ -58,6 +60,8 @@
     "@craco/craco": "^6.1.2",
     "@formatjs/cli": "^4.2.16",
     "babel-plugin-formatjs": "^10.2.15",
+    "concurrently": "^6.2.0",
+    "json-graphql-server": "^2.2.3",
     "prettier": "^2.3.0"
   }
 }
