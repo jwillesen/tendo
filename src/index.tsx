@@ -1,11 +1,20 @@
 import React from "react"
 import ReactDOM from "react-dom"
+import { IntlProvider } from "react-intl"
 import App from "./App"
 import reportWebVitals from "./reportWebVitals"
 
+const url = new URL(window.location.href)
+const lang = url.searchParams.get("lang") || ""
+
+// TODO: dynamically load translations based on lang and give it to IntlProvider
+const messages = {}
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <IntlProvider messages={messages} locale={lang} defaultLocale="en">
+      <App />
+    </IntlProvider>
   </React.StrictMode>,
   document.getElementById("root")
 )

@@ -10,20 +10,23 @@
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "eslint-plugin-formatjs": "^2.15.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-intl": "^5.18.1",
     "react-scripts": "4.0.3",
     "typescript": "^4.1.2",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "craco start",
+    "build": "craco build",
     "build:check": "tsc --noEmit",
-    "test": "react-scripts test",
+    "test": "craco test",
     "test:nowatch": "yarn test --watchAll=false",
     "lint": "eslint src",
     "checks": "yarn lint && yarn build:check && yarn test:nowatch",
+    "intl:extract": "formatjs extract 'src/**/*.ts*' --out-file lang/en.json --id-interpolation-pattern '[sha512:contenthash:base64:6]'",
     "eject": "react-scripts eject"
   },
   "prettier": {
@@ -34,6 +37,9 @@
     "extends": [
       "react-app",
       "react-app/jest"
+    ],
+    "plugins": [
+      "formatjs"
     ]
   },
   "browserslist": {
@@ -49,6 +55,9 @@
     ]
   },
   "devDependencies": {
+    "@craco/craco": "^6.1.2",
+    "@formatjs/cli": "^4.2.16",
+    "babel-plugin-formatjs": "^10.2.15",
     "prettier": "^2.3.0"
   }
 }
