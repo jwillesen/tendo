@@ -19,8 +19,16 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build:check": "tsc --noEmit",
     "test": "react-scripts test",
+    "test:nowatch": "yarn test --watchAll=false",
+    "lint": "eslint src",
+    "checks": "yarn lint && yarn build:check && yarn test:nowatch",
     "eject": "react-scripts eject"
+  },
+  "prettier": {
+    "semi": false,
+    "arrowParens": "avoid"
   },
   "eslintConfig": {
     "extends": [
@@ -39,5 +47,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "prettier": "^2.3.0"
   }
 }
