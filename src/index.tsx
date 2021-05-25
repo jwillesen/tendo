@@ -1,6 +1,8 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import { IntlProvider } from "react-intl"
+import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client"
+
 import App from "./App"
 import reportWebVitals from "./reportWebVitals"
 
@@ -10,10 +12,17 @@ const lang = url.searchParams.get("lang") || ""
 // TODO: dynamically load translations based on lang and give it to IntlProvider
 const messages = {}
 
+const graphqlClient = new ApolloClient({
+  uri: "/graphql",
+  cache: new InMemoryCache(),
+})
+
 ReactDOM.render(
   <React.StrictMode>
     <IntlProvider messages={messages} locale={lang} defaultLocale="en">
-      <App />
+      <ApolloProvider client={graphqlClient}>
+        <App />
+      </ApolloProvider>
     </IntlProvider>
   </React.StrictMode>,
   document.getElementById("root")
