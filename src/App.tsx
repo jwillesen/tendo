@@ -8,12 +8,18 @@ import Container from "@material-ui/core/Container"
 import Grid from "@material-ui/core/Grid"
 import Paper from "@material-ui/core/Paper"
 import Typography from "@material-ui/core/Typography"
-import { AllAppointments, ALL_APPOINTMENTS_QUERY } from "./queries"
+import {
+  FullAppointmentQuery,
+  FullAppointmentVars,
+  FullAppointmentResult,
+  defaultAppointmentId,
+} from "./queries"
 
 function App() {
-  const { loading, error, data } = useQuery<AllAppointments>(
-    ALL_APPOINTMENTS_QUERY
-  )
+  const { loading, error, data } = useQuery<
+    FullAppointmentResult,
+    FullAppointmentVars
+  >(FullAppointmentQuery, { variables: { id: defaultAppointmentId } })
 
   function renderBody() {
     if (loading) {
@@ -42,9 +48,13 @@ function App() {
     return (
       <div>
         <Typography>
-          <FormattedMessage defaultMessage="Tada!" />
+          <FormattedMessage
+            defaultMessage="Hello {patientFullName}"
+            values={{
+              patientFullName: data?.Appointment.Patient.name[0]?.text,
+            }}
+          />
         </Typography>
-        <pre>{JSON.stringify(data, undefined, 2)}</pre>
       </div>
     )
   }

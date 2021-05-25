@@ -3,7 +3,7 @@ import { render, waitForApollo } from "./test/utils"
 import { screen } from "@testing-library/react"
 import { MockedProvider } from "@apollo/client/testing"
 
-import { ALL_APPOINTMENTS_QUERY } from "./queries"
+import { FullAppointmentQuery, defaultAppointmentId } from "./queries"
 import App from "./App"
 
 describe("App", () => {
@@ -21,11 +21,22 @@ describe("App", () => {
     const mocks = [
       {
         request: {
-          query: ALL_APPOINTMENTS_QUERY,
+          query: FullAppointmentQuery,
+          variables: {
+            id: defaultAppointmentId,
+          },
         },
         result: {
           data: {
-            allAppointments: [{ id: "42" }],
+            Appointment: {
+              id: "a1",
+              Patient: {
+                id: "p1",
+                name: [{ text: "Iam Patient" }],
+              },
+              Doctor: { id: "d1", name: [] },
+              Diagnoses: [],
+            },
           },
         },
       },
@@ -37,7 +48,6 @@ describe("App", () => {
       </MockedProvider>
     )
     await waitForApollo()
-    expect(screen.getByText(/tada/i)).toBeInTheDocument()
-    expect(screen.getByText(/42/i)).toBeInTheDocument()
+    expect(screen.getByText(/iam patient/i)).toBeInTheDocument()
   })
 })
