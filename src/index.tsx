@@ -2,12 +2,14 @@ import React from "react"
 import ReactDOM from "react-dom"
 import { IntlProvider } from "react-intl"
 import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client"
+import CssBaseline from "@material-ui/core/CssBaseline"
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles"
 
 import App from "./App"
 import reportWebVitals from "./reportWebVitals"
 
 const url = new URL(window.location.href)
-const lang = url.searchParams.get("lang") || ""
+const lang = url.searchParams.get("lang") || "en"
 
 // TODO: dynamically load translations based on lang and give it to IntlProvider
 const messages = {}
@@ -17,11 +19,20 @@ const graphqlClient = new ApolloClient({
   cache: new InMemoryCache(),
 })
 
+const theme = createMuiTheme({
+  palette: {
+    type: "dark",
+  },
+})
+
 ReactDOM.render(
   <React.StrictMode>
     <IntlProvider messages={messages} locale={lang} defaultLocale="en">
       <ApolloProvider client={graphqlClient}>
-        <App />
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <App />
+        </ThemeProvider>
       </ApolloProvider>
     </IntlProvider>
   </React.StrictMode>,

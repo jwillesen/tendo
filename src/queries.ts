@@ -1,5 +1,7 @@
 import { gql, DocumentNode } from "@apollo/client"
 
+// Ideally we'd generate these types from the graphql schema
+
 export interface Appointment {
   id: string
 }
