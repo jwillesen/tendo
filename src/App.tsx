@@ -1,4 +1,3 @@
-import React from "react"
 import { FormattedMessage } from "react-intl"
 import { useQuery } from "@apollo/client"
 import Alert from "@material-ui/lab/Alert"
@@ -14,15 +13,26 @@ import {
   FullAppointmentResult,
   defaultAppointmentId,
 } from "./queries"
+import useQuestionPack from "./useQuestionPack"
 
 function App() {
-  const { loading, error, data } = useQuery<
-    FullAppointmentResult,
-    FullAppointmentVars
-  >(FullAppointmentQuery, { variables: { id: defaultAppointmentId } })
+  const {
+    loading: loadingAppointment,
+    error: appointmentError,
+    data: appointmentResult,
+  } = useQuery<FullAppointmentResult, FullAppointmentVars>(
+    FullAppointmentQuery,
+    { variables: { id: defaultAppointmentId } }
+  )
+
+  const {
+    loading: loadingQuestionPack,
+    error: questionPackError,
+    questionPack,
+  } = useQuestionPack(appointmentResult?.Appointment)
 
   function renderBody() {
-    if (loading) {
+    if (loadingAppointment || loadingQuestionPack) {
       return (
         <Grid container justify="center">
           <CircularProgress size={100} />
@@ -33,7 +43,7 @@ function App() {
       )
     }
 
-    if (error) {
+    if (appointmentError || questionPackError) {
       return (
         <div>
           <Alert severity="error">
@@ -49,9 +59,11 @@ function App() {
       <div>
         <Typography>
           <FormattedMessage
-            defaultMessage="Hello {patientFullName}"
+            defaultMessage="Hello {patientFullName}, I have {numQuestions} questions for you"
             values={{
-              patientFullName: data?.Appointment.Patient.name[0]?.text,
+              patientFullName:
+                appointmentResult?.Appointment.Patient.name[0]?.text,
+              numQuestions: questionPack?.length,
             }}
           />
         </Typography>

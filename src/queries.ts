@@ -76,13 +76,15 @@ export interface FullAppointmentVars {
   id: string
 }
 
+export interface FullAppointment {
+  id: string
+  Patient: Pick<Patient, "id" | "name">
+  Doctor: Pick<Doctor, "id" | "name">
+  Diagnoses: Pick<Diagnosis, "id" | "code">[]
+}
+
 export interface FullAppointmentResult {
-  Appointment: {
-    id: string
-    Patient: Pick<Patient, "id" | "name">
-    Doctor: Pick<Doctor, "id" | "name">
-    Diagnoses: Pick<Diagnosis, "id" | "code">[]
-  }
+  Appointment: FullAppointment
 }
 
 // TODO: I'm not sure why the cast to DocumentNode is necessary. Some kind of
