@@ -1,9 +1,9 @@
 import { render as intlRender, waitForApollo } from "./test/utils"
-import { fireEvent, screen } from "@testing-library/react"
+import { fireEvent, screen, cleanup } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { MockedProvider } from "@apollo/client/testing"
 import { FullAppointmentQuery, defaultAppointmentId } from "./queries"
-import { store } from "./pullstate"
+import { store, initialState } from "./pullstate"
 import App from "./App"
 
 async function render(mocks: any[]) {
@@ -50,6 +50,11 @@ function defaultMocks() {
 }
 
 describe("App", () => {
+  afterEach(() => {
+    cleanup()
+    store.replace(initialState)
+  })
+
   it("displays a loading message", async () => {
     const waiter = render([])
     expect(screen.getByText(/loading/i)).toBeInTheDocument()
@@ -93,7 +98,10 @@ describe("App", () => {
 
       describe("diagnosis feeling", () => {
         beforeEach(() => {
-          userEvent.type(screen.getByLabelText(/response/i), "blah")
+          userEvent.type(
+            screen.getByLabelText(/response/i),
+            "explanation response"
+          )
           fireEvent.click(screen.getByText(/continue/i))
         })
 
@@ -107,6 +115,35 @@ describe("App", () => {
           userEvent.type(responseField, message)
           expect(responseField).toHaveValue(message)
           expect(store.getRawState().answers[2]).toBe(message)
+        })
+
+        describe("summary", () => {
+          beforeEach(() => {
+            userEvent.type(
+              screen.getByLabelText(/response/i),
+              "feeling response"
+            )
+            fireEvent.click(screen.getByText(/continue/i))
+          })
+
+          it("displays answer summaries", () => {
+            expect(screen.getByText(/5/i)).toBeInTheDocument()
+            expect(
+              screen.getByText(/explanation response/i)
+            ).toBeInTheDocument()
+            expect(screen.getByText(/feeling response/i)).toBeInTheDocument()
+          })
+
+          describe("final thanks", () => {
+            beforeEach(() => {
+              fireEvent.click(screen.getByText("Submit"))
+            })
+
+            it("removes buttons", () => {
+              expect(screen.queryByText(/continue|submit/i)).toBeNull()
+              expect(screen.queryByText("Back")).toBeNull()
+            })
+          })
         })
       })
     })

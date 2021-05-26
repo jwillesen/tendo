@@ -30,10 +30,12 @@ function App() {
     if (loading) {
       return (
         <Grid container justify="center">
-          <CircularProgress size={100} />
-          <Typography variant="srOnly">
-            <FormattedMessage defaultMessage="Loading" />
-          </Typography>
+          <Grid item>
+            <CircularProgress size={100} />
+            <Typography variant="srOnly">
+              <FormattedMessage defaultMessage="Loading" />
+            </Typography>
+          </Grid>
         </Grid>
       )
     }

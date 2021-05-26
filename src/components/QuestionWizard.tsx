@@ -5,8 +5,10 @@ import { FullAppointment } from "../queries"
 import DoctorRating from "./questions/DoctorRating"
 import DiagnosisExplanation from "./questions/DiagnosisExplanation"
 import DiagnosisFeeling from "./questions/DiagnosisFeeling"
-import { FormattedMessage } from "react-intl"
+import { FormattedMessage, useIntl } from "react-intl"
 import { store } from "../pullstate"
+import AnswerSummary from "./questions/AnswerSummary"
+import FinalThanks from "./questions/FinalThanks"
 
 export interface Props {
   appointment: FullAppointment
@@ -16,6 +18,8 @@ export interface Props {
 const MIN_STEP = 0
 
 export default function QuestionWizard({ appointment }: Props) {
+  const intl = useIntl()
+
   const [step, setStep] = useState(0)
   const answers = store.useState(s => s.answers)
 
@@ -28,7 +32,7 @@ export default function QuestionWizard({ appointment }: Props) {
   }
 
   function canContinue() {
-    return !!answers[step]
+    return !!answers[step] || step === 3
   }
 
   function renderQuestion() {
@@ -39,33 +43,46 @@ export default function QuestionWizard({ appointment }: Props) {
         return <DiagnosisExplanation appointment={appointment} />
       case 2:
         return <DiagnosisFeeling appointment={appointment} />
+      case 3:
+        return <AnswerSummary appointment={appointment} />
+      case 4:
+        return <FinalThanks appointment={appointment} />
       default:
         throw new Error("step index is out of range in QuestionWizard")
     }
   }
 
+  const primaryButtonText =
+    step === 3
+      ? intl.formatMessage({ defaultMessage: "Submit" })
+      : intl.formatMessage({ defaultMessage: "Continue" })
+
+  const displayButtons = step !== 4
+
   return (
     <Grid container direction="column" spacing={2}>
       <Grid item>{renderQuestion()}</Grid>
-      <Grid item>
-        <Grid container justify="space-between">
-          <Button
-            variant="contained"
-            disabled={step === MIN_STEP}
-            onClick={decrementStep}
-          >
-            <FormattedMessage defaultMessage="Back" />
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            disabled={!canContinue()}
-            onClick={incrementStep}
-          >
-            <FormattedMessage defaultMessage="Continue" />
-          </Button>
+      {displayButtons && (
+        <Grid item>
+          <Grid container justify="space-between">
+            <Button
+              variant="contained"
+              disabled={step === MIN_STEP}
+              onClick={decrementStep}
+            >
+              <FormattedMessage defaultMessage="Back" />
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              disabled={!canContinue()}
+              onClick={incrementStep}
+            >
+              {primaryButtonText}
+            </Button>
+          </Grid>
         </Grid>
-      </Grid>
+      )}
     </Grid>
   )
 }
