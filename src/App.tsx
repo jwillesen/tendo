@@ -14,12 +14,17 @@ import {
   FullAppointmentResult,
   defaultAppointmentId,
 } from "./queries"
+import QuestionWizard from "./components/QuestionWizard"
 
 function App() {
-  const { loading, error, data } = useQuery<
-    FullAppointmentResult,
-    FullAppointmentVars
-  >(FullAppointmentQuery, { variables: { id: defaultAppointmentId } })
+  const {
+    loading,
+    error,
+    data: appointmentResult,
+  } = useQuery<FullAppointmentResult, FullAppointmentVars>(
+    FullAppointmentQuery,
+    { variables: { id: defaultAppointmentId } }
+  )
 
   function renderBody() {
     if (loading) {
@@ -33,30 +38,17 @@ function App() {
       )
     }
 
-    if (error) {
+    if (error || !appointmentResult) {
       return (
-        <div>
-          <Alert severity="error">
-            <Typography>
-              <FormattedMessage defaultMessage="There was an error loading your data" />
-            </Typography>
-          </Alert>
-        </div>
+        <Alert severity="error">
+          <Typography>
+            <FormattedMessage defaultMessage="There was an error loading your data" />
+          </Typography>
+        </Alert>
       )
     }
 
-    return (
-      <div>
-        <Typography>
-          <FormattedMessage
-            defaultMessage="Hello {patientFullName}"
-            values={{
-              patientFullName: data?.Appointment.Patient.name[0]?.text,
-            }}
-          />
-        </Typography>
-      </div>
-    )
+    return <QuestionWizard appointment={appointmentResult.Appointment} />
   }
 
   return (

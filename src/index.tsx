@@ -19,9 +19,13 @@ const graphqlClient = new ApolloClient({
   cache: new InMemoryCache(),
 })
 
+// I'd rather have a dark theme, but for some reason the theming isn't working
+// and it's always using the main colors instead of the light/dark colors. The
+// light backgrounds look better with the main colors so we'll go with that for
+// now
 const theme = createMuiTheme({
   palette: {
-    type: "dark",
+    type: "light",
   },
 })
 
