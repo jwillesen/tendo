@@ -1,13 +1,13 @@
 import { useIntl } from "react-intl"
 import { FullAppointment } from "../../queries"
-import { findDiagnosisName, findFamilyName } from "../../utils/names"
+import { findDiagnosisName } from "../../utils/names"
 import FreeResponseQuestion from "../FreeResponseQuestion"
 
 export interface Props {
   appointment: FullAppointment
 }
 
-const QUESTION_INDEX = 1
+const QUESTION_INDEX = 2
 
 export default function DiagnosisExplanation({ appointment }: Props) {
   const intl = useIntl()
@@ -17,11 +17,10 @@ export default function DiagnosisExplanation({ appointment }: Props) {
       questionText={intl.formatMessage(
         {
           defaultMessage:
-            'Thank you. You were diagnosed with "{diagnosisName}." Did Dr. {doctorFamilyName} explain how to manage this diagnosis in a way you could understand?',
+            'We appreciate the feedback, one last question: how do you feel about being diagnosed with "{diagnosisName}?"',
         },
         {
           diagnosisName: findDiagnosisName(appointment.Diagnoses),
-          doctorFamilyName: findFamilyName(appointment.Doctor.name),
         }
       )}
     />

@@ -90,6 +90,25 @@ describe("App", () => {
         expect(responseField).toHaveValue(message)
         expect(store.getRawState().answers[1]).toBe(message)
       })
+
+      describe("diagnosis feeling", () => {
+        beforeEach(() => {
+          userEvent.type(screen.getByLabelText(/response/i), "blah")
+          fireEvent.click(screen.getByText(/continue/i))
+        })
+
+        it("requires a response to continue", () => {
+          expect(screen.getByText(/continue/i).closest("button")).toBeDisabled()
+        })
+
+        it("records the response", () => {
+          const responseField = screen.getByLabelText(/response/i)
+          const message = "I feel ok"
+          userEvent.type(responseField, message)
+          expect(responseField).toHaveValue(message)
+          expect(store.getRawState().answers[2]).toBe(message)
+        })
+      })
     })
   })
 })

@@ -4,6 +4,7 @@ import Grid from "@material-ui/core/Grid"
 import { FullAppointment } from "../queries"
 import DoctorRating from "./questions/DoctorRating"
 import DiagnosisExplanation from "./questions/DiagnosisExplanation"
+import DiagnosisFeeling from "./questions/DiagnosisFeeling"
 import { FormattedMessage } from "react-intl"
 import { store } from "../pullstate"
 
@@ -36,6 +37,8 @@ export default function QuestionWizard({ appointment }: Props) {
         return <DoctorRating appointment={appointment} />
       case 1:
         return <DiagnosisExplanation appointment={appointment} />
+      case 2:
+        return <DiagnosisFeeling appointment={appointment} />
       default:
         throw new Error("step index is out of range in QuestionWizard")
     }
