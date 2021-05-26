@@ -1,5 +1,6 @@
 import { render as intlRender, waitForApollo } from "./test/utils"
 import { fireEvent, screen } from "@testing-library/react"
+import userEvent from "@testing-library/user-event"
 import { MockedProvider } from "@apollo/client/testing"
 import { FullAppointmentQuery, defaultAppointmentId } from "./queries"
 import { store } from "./pullstate"
@@ -33,7 +34,14 @@ function defaultMocks() {
               name: [{ given: ["Iam"], family: "Patient" }],
             },
             Doctor: { id: "d1", name: [{ given: ["Some"], family: "Doc" }] },
-            Diagnoses: [],
+            Diagnoses: [
+              {
+                id: "diag1",
+                code: {
+                  coding: [{ name: "Halitosis" }],
+                },
+              },
+            ],
           },
         },
       },
@@ -64,6 +72,24 @@ describe("App", () => {
       fireEvent.keyDown(sliderThumb, { key: "ArrowRight" })
       expect(sliderThumb.getAttribute("aria-valuenow")).toBe("6")
       expect(store.getRawState().answers[0]).toBe(6)
+    })
+
+    describe("diagnosis explanation", () => {
+      beforeEach(() => {
+        fireEvent.click(screen.getByText(/continue/i))
+      })
+
+      it("requires a response to continue", () => {
+        expect(screen.getByText(/continue/i).closest("button")).toBeDisabled()
+      })
+
+      it("records the response", () => {
+        const responseField = screen.getByLabelText(/response/i)
+        const message = "Yes it was"
+        userEvent.type(responseField, message)
+        expect(responseField).toHaveValue(message)
+        expect(store.getRawState().answers[1]).toBe(message)
+      })
     })
   })
 })

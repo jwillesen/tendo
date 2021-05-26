@@ -1,3 +1,4 @@
+import Grid from "@material-ui/core/Grid"
 import Typography from "@material-ui/core/Typography"
 import Slider from "@material-ui/core/Slider"
 import { FormattedMessage, useIntl } from "react-intl"
@@ -29,28 +30,32 @@ export default function DoctorRating({ appointment }: Props) {
   })
 
   return (
-    <div>
-      <Typography>
-        <FormattedMessage
-          defaultMessage="Hi {patientGivenName}, on a scale of 1-10, would you recommend Dr. {doctorFamilyName} to a friend or family member? 1 = Would not recommend, 10 = Would strongly recommend"
-          values={{
-            patientGivenName: findGivenName(appointment.Patient.name),
-            doctorFamilyName: findFamilyName(appointment.Doctor.name),
-          }}
+    <Grid container direction="column" spacing={1}>
+      <Grid item>
+        <Typography>
+          <FormattedMessage
+            defaultMessage="Hi {patientGivenName}, on a scale of 1-10, would you recommend Dr. {doctorFamilyName} to a friend or family member? 1 = Would not recommend, 10 = Would strongly recommend"
+            values={{
+              patientGivenName: findGivenName(appointment.Patient.name),
+              doctorFamilyName: findFamilyName(appointment.Doctor.name),
+            }}
+          />
+        </Typography>
+      </Grid>
+      <Grid item>
+        <Slider
+          aria-label={intl.formatMessage({
+            defaultMessage: "Select recommendation value",
+          })}
+          marks={marks}
+          min={1}
+          max={10}
+          step={1}
+          valueLabelDisplay="auto"
+          value={rating}
+          onChange={(_e, value) => setRating(value as number)}
         />
-      </Typography>
-      <Slider
-        aria-label={intl.formatMessage({
-          defaultMessage: "Select recommendation value",
-        })}
-        marks={marks}
-        min={1}
-        max={10}
-        step={1}
-        valueLabelDisplay="auto"
-        value={rating}
-        onChange={(_e, value) => setRating(value as number)}
-      />
-    </div>
+      </Grid>
+    </Grid>
   )
 }
