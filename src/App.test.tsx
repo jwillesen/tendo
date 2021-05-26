@@ -79,6 +79,10 @@ describe("App", () => {
       expect(store.getRawState().answers[0]).toBe(6)
     })
 
+    it("disables the back button", () => {
+      expect(screen.getByText(/back/i).closest("button")).toBeDisabled()
+    })
+
     describe("diagnosis explanation", () => {
       beforeEach(() => {
         fireEvent.click(screen.getByText(/continue/i))
@@ -86,6 +90,11 @@ describe("App", () => {
 
       it("requires a response to continue", () => {
         expect(screen.getByText(/continue/i).closest("button")).toBeDisabled()
+      })
+
+      it("goes back", () => {
+        fireEvent.click(screen.getByText("Back"))
+        expect(screen.getByText(/scale of 1-10/)).toBeInTheDocument()
       })
 
       it("records the response", () => {
@@ -103,6 +112,11 @@ describe("App", () => {
             "explanation response"
           )
           fireEvent.click(screen.getByText(/continue/i))
+        })
+
+        it("goes back", () => {
+          fireEvent.click(screen.getByText("Back"))
+          expect(screen.getByText(/explain how to manage/)).toBeInTheDocument()
         })
 
         it("requires a response to continue", () => {
@@ -132,6 +146,11 @@ describe("App", () => {
               screen.getByText(/explanation response/i)
             ).toBeInTheDocument()
             expect(screen.getByText(/feeling response/i)).toBeInTheDocument()
+          })
+
+          it("goes back", () => {
+            fireEvent.click(screen.getByText("Back"))
+            expect(screen.getByText(/how do you feel/)).toBeInTheDocument()
           })
 
           describe("final thanks", () => {
