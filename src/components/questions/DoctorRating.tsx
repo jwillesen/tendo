@@ -25,7 +25,7 @@ export default function DoctorRating({ appointment }: Props) {
 
   const marks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(v => {
     const mark: any = { value: v }
-    if ([1, 5, 10].includes(v)) mark.label = v.toString()
+    if ([1, 10].includes(v)) mark.label = v.toString()
     return mark
   })
 
