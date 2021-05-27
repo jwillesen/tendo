@@ -10,12 +10,12 @@ import { store } from "../pullstate"
 import AnswerSummary from "./questions/AnswerSummary"
 import FinalThanks from "./questions/FinalThanks"
 
+const MIN_STEP = 0
+const MAX_STEP = 4
+
 export interface Props {
   appointment: FullAppointment
 }
-
-// const MAX_STEP = 3
-const MIN_STEP = 0
 
 export default function QuestionWizard({ appointment }: Props) {
   const intl = useIntl()
@@ -57,7 +57,7 @@ export default function QuestionWizard({ appointment }: Props) {
       ? intl.formatMessage({ defaultMessage: "Submit" })
       : intl.formatMessage({ defaultMessage: "Continue" })
 
-  const displayButtons = step !== 4
+  const displayButtons = step !== MAX_STEP
 
   return (
     <Grid container direction="column" spacing={2}>
